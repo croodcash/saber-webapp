@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <link rel="shortcut icon" href="{% static 'transcribe/favicon.png' %}"/>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SABER - Automatic Transcription Service</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+</head>
+    <body>
+        <div class="modal {% if file_url %} is-active {% endif %}">
+          <div class="modal-background"></div>
+              <div class="modal-content">
+                <div class="box">
+                    <p>Your file is being processed!</p>
+                </div>
+              </div>
+          <button class="modal-close is-large" aria-label="close"></button>
+        </div>
+        <nav class="navbar has-shadow">
+            <div class="container">
+                <div class="navbar-brand">
+                    <div class="navbar-item">
+                        <h1>SABER</h1>
+                    </div>
+                </div>
+                <div class="navbar-start">
+                    <div class="navbar-menu">
+                        <!--	  			<a class="navbar-item" href="/something">Docs</a>-->
+                        <!--	  			<a class="navbar-item" href="/something">FAQ</a>-->
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <section class="hero is-fullheight-with-navbar">
+            <div class="hero-body">
+                <div class="container">
+                    <h1 class="title">
+                        SABER
+                    </h1>
+                    <p class="subtitle">
+                        Your best automatic music transcription service
+                    </p>
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="field">
+                            <label class="label" for="email">{{ form.email.label_tag }}</label>
+                            <div class="control">
+                                <input class="input" type="email" name="email" id="email" placeholder="johndoe@gmail.com">
+                            </div>
+                            <p class="help">Email where the finished transcription will be sent to</p>
+                        </div>
+                        <div class="control field is-small">
+                            <label class="label" for="model">Choose model</label>
+                            <div class="select">
+                                <select id="model" name="model" required>
+                                    <option value="cnn_mel_l0006">cnn_mel_l0006</option>
+                                    <option value="lstm_train_result_0006">lstm_train_result_0006</option>
+                               </select>
+                            </div>
+                        </div>
+                        <div id="file-js-example" class="file field has-name">
+                            <label class="file-label">
+                                <input class="file-input" type="file" name="file">
+                                <span class="file-cta">
+                                    <span class="file-icon">
+                                        <i class="fas fa-upload"></i>
+                                    </span>
+                                    <span class="file-label">
+                                        Choose a file…
+                                    </span>
+                                </span>
+                                <span class="file-name">
+                                    No file uploaded
+                                </span>
+                            </label>
+                        </div>
+                    <script>
+                      const fileInput = document.querySelector('#file-js-example input[type=file]');
+                      fileInput.onchange = () => {
+                        if (fileInput.files.length > 0) {
+                          const fileName = document.querySelector('#file-js-example .file-name');
+                          fileName.textContent = fileInput.files[0].name;
+                        }
+                      }
+                      document.addEventListener('DOMContentLoaded', () => {
+                      (document.querySelectorAll('.modal-close') || []).forEach(($delete) => {
+                        $notification = $delete.parentNode;
+
+                        $delete.addEventListener('click', () => {
+                          $notification.parentNode.removeChild($notification);
+                        });
+                      });
+                    });
+                    </script>
+                        <div class="field">
+                            <p class="control">
+                                <input type="submit" value="SAVE" class="button is-success">
+                            </p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </body>
+</html>
+
